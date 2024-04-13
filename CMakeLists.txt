@@ -9,6 +9,8 @@ add_executable(
     ${PROJECT_NAME}
     ${PROJECT_SRCS}
 )
-target_link_libraries(${PROJECT_NAME} modbus)
+add_subdirectory(3rdparty/eigen)
+target_link_libraries(${PROJECT_NAME} PRIVATE modbus Eigen3::Eigen)
+
 # set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 configure_file(config.h.in config.h)
