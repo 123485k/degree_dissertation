@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(modbusapp VERSION 0.1.0)
 include(cmake/modbus.cmake)
 file(GLOB_RECURSE PROJECT_SRCS "src/*.c" "src/*.cpp")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 add_executable(
     ${PROJECT_NAME}
     ${PROJECT_SRCS}
