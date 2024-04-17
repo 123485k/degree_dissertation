@@ -1,17 +1,48 @@
-#include <cmath>
-#include <iostream>
+#include <modbus/modbus-tcp.h>
 #include <modbus/modbus.h>
-#include <cstdint>
-#include "loop.h"
+#include <unistd.h>
 
-int main(int argc, char **argv)
-{
+#include <condition_variable>
+#include <iostream>
+#include <thread>
 
-    uint8_t a=1;
-    modbus_t * ctx;
-    ctx = modbus_new_tcp("127.0.0.1", 1502);
-    while (1)
-    {
-        
+#include "modbus-server.hpp"
+#include "phymodule.hpp"
+
+using std::atomic;
+using std::condition_variable;
+using std::mutex;
+using std::unique_lock;
+
+int main(int argc, char **argv) {
+  std::cout << "starting server\n";
+  std::string portstr = "1502"; //
+  std::cout << "listen on " << portstr << "\n"; 
+  ModbusSlave Server("0.0.0.0", portstr); // init server
+  Server.run(); // start server
+  SecondOderModule M;
+
+  atomic<bool> running{true};
+  mutex mtx;
+  condition_variable cv;
+  auto next_execution_time =
+      std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(5);
+  std::thread loop([&]() {
+    while (running) {
+      unique_lock<mutex> lck(mtx);
+      cv.wait_until(lck, next_execution_time, [&]() { return running.load(); });
+      if (!running.load()) break;
+
+      M.in = Server.getRegFloat_cdab(73);
+      M.Step();
+      Server.setInputRegFloat_dcba(73, M.out);
+      next_execution_time += std::chrono::milliseconds(5);
     }
+  });
+  cv.notify_all();
+  loop.detach();
+
+  while (1) {
+  }
+  return 0;
 }

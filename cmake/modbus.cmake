@@ -11,14 +11,21 @@ set(MODBUS_STATIC_LIB ${MODBUS_BIN}/lib/libmodbus.a)
 set(MODBUS_INCLUDES ${MODBUS_BIN}/include)
 
 file(MAKE_DIRECTORY ${MODBUS_INCLUDES})
+find_program(BEAR "bear")
 
+if(BEAR)
+  message("find bear: ${BEAR}")
+  set(MODBUS_BUILD_COMMAND ${BEAR} -- make -j)
+else()
+  set(MODBUS_BUILD_COMMAND make -j)
+endif()
 ExternalProject_Add(
   libmodbus
   PREFIX ${MODBUS_BIN}
   SOURCE_DIR ${MODBUS_DIR}
   DOWNLOAD_COMMAND cd ${MODBUS_DIR} && git clean -dfX && ${MODBUS_DIR}/autogen.sh
   CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${MODBUS_DIR}/configure  --srcdir=${MODBUS_DIR} --host=${CMAKE_SYSTEM_PROCESSOR} --prefix=${MODBUS_BIN} --enable-static=yes --disable-shared --disable-tests
-  BUILD_COMMAND make
+  BUILD_COMMAND ${MODBUS_BUILD_COMMAND}
   INSTALL_COMMAND make install
   BUILD_BYPRODUCTS ${MODBUS_STATIC_LIB}
 )

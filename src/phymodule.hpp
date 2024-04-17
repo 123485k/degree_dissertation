@@ -1,12 +1,19 @@
 #pragma once
 
-#include <cstdint>
+#include <Eigen/Core>
 
-class Module {
-public:
-  double env_temp;
-  double temp;
-  uint32_t Ts;
-  Module(double init_temp, double env_temp);
+class SecondOderModule {
+ public:
+  double in;
+  double out;
+  double Ts;
+  SecondOderModule();
   void Step();
+
+ private:
+  Eigen::Vector2d x;
+  Eigen::Matrix2d A;
+  Eigen::Vector2d B;
+  Eigen::RowVector2d C;
+  double D;
 };
