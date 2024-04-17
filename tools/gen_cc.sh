@@ -1,0 +1,1 @@
+jq -s add build/compile_commands.json build/libmodbus/src/libmodbus-build/compile_commands.json > compile_commands.json
