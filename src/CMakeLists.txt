@@ -1,6 +1,7 @@
 aux_source_directory(. SRC_LIST)
 add_subdirectory(modbus-server)
 add_subdirectory(phymodule)
+add_subdirectory(timer)
 add_executable(
     ${PROJECT_NAME}
     ${SRC_LIST}
@@ -10,4 +11,5 @@ target_link_libraries(${PROJECT_NAME}
 PRIVATE
     modbus-server
     phymodule
+    timer
 )

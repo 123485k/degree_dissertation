@@ -1,14 +1,13 @@
 #include "phymodule.hpp"
 
-
 SecondOderModule::SecondOderModule()
     : in(0),
       out(0),
-      Ts(5e-3),
+      Ts(10e-3),
       x{0, 0},
-      A{{-7, -9}, {1, 0}},
+      A{{-0.0400, -0.0400}, {1.0000, 0}},
       B({1, 0}),
-      C{2, 1},
+      C{0, 4.0000},
       D(0) {}
 void SecondOderModule::Step() {
   x += Ts * (A * x + B * in);
