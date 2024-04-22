@@ -1,8 +1,8 @@
 #pragma once
 
 #include <arpa/inet.h>
-#include <modbus/modbus-tcp.h>
-#include <modbus/modbus.h>
+#include <modbus-tcp.h>
+#include <modbus.h>
 #include <netinet/in.h>
 #include <sys/select.h>
 

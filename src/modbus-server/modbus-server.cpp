@@ -1,6 +1,6 @@
 #include "modbus-server.hpp"
 
-#include <modbus/modbus.h>
+#include <modbus.h>
 
 #include <cstdint>
 #include <cstring>

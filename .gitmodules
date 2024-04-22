@@ -1,5 +1,5 @@
 [submodule "3rdparty/libmodbus"]
-	path = 3rdparty/libmodbus
+	path = 3rdparty/modbus/libmodbus
 	url = https://github.com/stephane/libmodbus.git
 [submodule "3rdparty/eigen"]
 	path = 3rdparty/eigen
