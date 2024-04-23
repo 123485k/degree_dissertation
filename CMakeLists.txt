@@ -6,6 +6,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 add_subdirectory(3rdparty/modbus)
 add_subdirectory(3rdparty/eigen)
+add_subdirectory(3rdparty/CLI11)
 add_subdirectory(src)
 
 

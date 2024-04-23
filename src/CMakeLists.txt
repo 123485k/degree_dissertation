@@ -12,4 +12,5 @@ PRIVATE
     modbus-server
     phymodule
     timer
+    CLI11::CLI11
 )
