@@ -2,3 +2,12 @@ Language: Cpp
  
 BasedOnStyle: Google
 AllowAllArgumentsOnNextLine: true
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
+AccessModifierOffset: -4
+NamespaceIndentation: None
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+AlignTrailingComments: true
+ContinuationIndentWidth: 0
