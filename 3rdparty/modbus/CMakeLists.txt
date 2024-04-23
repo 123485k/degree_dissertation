@@ -91,6 +91,12 @@ if(CMAKE_COMPILER_IS_GNUCC)
   target_compile_options(modbus PRIVATE -D_GNU_SOURCE)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
+    target_compile_options(modbus PRIVATE -D_GNU_SOURCE)
+  endif()
+endif()
+
 if(WIN32)
   target_link_libraries(modbus  wsock32 ws2_32)
 endif()
