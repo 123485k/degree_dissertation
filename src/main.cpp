@@ -29,9 +29,9 @@ int main(int argc, char **argv)
 
     std::cout << "Starting server\n";
     std::cout << "Listen on " << listen_address << ":" << port << "\n";
-
-    ModbusSlave Server(listen_address, std::to_string(port));  // init server
-    Server.run();                                              // start server
+    auto port_str=std::to_string(port);
+    ModbusSlave Server(listen_address, port_str);  // init server
+    Server.start();                                              // start server
 
     SecondOderModule M;
     PeriodicTimer timer(std::chrono::milliseconds{10},

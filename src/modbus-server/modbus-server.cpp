@@ -1,30 +1,26 @@
 #include "modbus-server.hpp"
 
-#include <modbus.h>
-
-#include <cstdint>
 #include <cstring>
 #include <iostream>
-#include <thread>
 
-bool ModbusSlave::initModbus(std::string Host_Name = "0.0.0.0",
-                             std::string port = "502", bool debugging = true)
+bool ModbusSlave::initModbus(std::string& Host_Name,
+                             std::string& port, bool debugging = true)
 {
-    ctx = modbus_new_tcp_pi(Host_Name.c_str(), port.c_str());
-    modbus_set_debug(ctx, debugging);
-    if (ctx == nullptr)
+    ctx_ = modbus_new_tcp_pi(Host_Name.c_str(), port.c_str());
+    modbus_set_debug(ctx_, debugging);
+    if (ctx_ == nullptr)
     {
         std::cerr << "There was an error allocating the modbus\n";
         throw -1;
     }
-    m_modbusSocket = modbus_tcp_pi_listen(ctx, 1);
+    m_modbusSocket = modbus_tcp_pi_listen(ctx_, 1);
     mapping = modbus_mapping_new(m_numBits, m_numInputBits, m_numInputRegisters,
                                  m_numRegisters);
     if (mapping == nullptr)
     {
         std::cerr << "Unable to assign mapping: " << modbus_strerror(errno)
                   << "\n";
-        modbus_free(ctx);
+        modbus_free(ctx_);
         m_initialized = false;
         return false;
     }
@@ -32,7 +28,7 @@ bool ModbusSlave::initModbus(std::string Host_Name = "0.0.0.0",
     return true;
 }
 
-ModbusSlave::ModbusSlave(std::string host, std::string port)
+ModbusSlave::ModbusSlave(std::string& host, std::string& port)
 {
     initModbus(host, port, false);
 }
@@ -40,8 +36,8 @@ ModbusSlave::ModbusSlave(std::string host, std::string port)
 ModbusSlave::~ModbusSlave()
 {
     modbus_mapping_free(mapping);
-    modbus_close(ctx);
-    modbus_free(ctx);
+    modbus_close(ctx_);
+    modbus_free(ctx_);
 }
 void ModbusSlave::recieveMessages()
 {
@@ -105,11 +101,11 @@ void ModbusSlave::recieveMessages()
             }
             else
             {
-                modbus_set_socket(ctx, master_socket);
-                rc = modbus_receive(ctx, query);
+                modbus_set_socket(ctx_, master_socket);
+                rc = modbus_receive(ctx_, query);
                 if (rc > 0)
                 {
-                    modbus_reply(ctx, query, rc, mapping);
+                    modbus_reply(ctx_, query, rc, mapping);
                 }
                 else if (rc == -1)
                 {
@@ -133,19 +129,27 @@ void ModbusSlave::recieveMessages()
 
 void ModbusSlave::run()
 {
-    std::thread loop(
-    [this]()
+    while (m_running)
     {
-        while (true)
-        {
-            if (m_initialized)
-                recieveMessages();
-            else
-                m_initialized = true;
-        }
-    });
-    loop.detach();
-    return;
+        if (m_initialized)
+            recieveMessages();
+        else
+            m_initialized = true;
+    }
+}
+
+void ModbusSlave::start()
+{
+    m_running = true;
+    m_thread = std::thread(&ModbusSlave::run, this);
+}
+
+void ModbusSlave::stop()
+{
+    m_running = false;
+    if (m_thread.joinable()) {
+    m_thread.join();
+    }
 }
 
 float ModbusSlave::getRegFloat_cdab(uint16_t regaddr)
@@ -157,8 +161,8 @@ bool ModbusSlave::setInputRegFloat_dcba(uint16_t regaddr, float value)
 {
     if (regaddr > m_numInputBits - 2)
         return false;
-    slavemutex.lock();
+    slavemutex_.lock();
     modbus_set_float_dcba(value, &mapping->tab_input_registers[regaddr]);
-    slavemutex.unlock();
+    slavemutex_.unlock();
     return true;
 }
