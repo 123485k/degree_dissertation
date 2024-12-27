@@ -13,11 +13,12 @@ int main(int argc, char **argv)
 
     std::string listen_address = "0.0.0.0";
     int port = 502;
-
+    bool verbos;
     app.add_option("-l,--listen", listen_address, "Server listening address")
     ->capture_default_str();
     app.add_option("-p,--port", port, "Server listening port")
     ->capture_default_str();
+    app.add_option("-v,--verbos", verbos, "Enable verbos log");
     try
     {
         app.parse(argc, argv);
@@ -29,9 +30,9 @@ int main(int argc, char **argv)
 
     std::cout << "Starting server\n";
     std::cout << "Listen on " << listen_address << ":" << port << "\n";
-    auto port_str=std::to_string(port);
+    auto port_str = std::to_string(port);
     ModbusSlave Server(listen_address, port_str);  // init server
-    Server.start();                                              // start server
+    Server.start();                                // start server
 
     SecondOderModule M;
     PeriodicTimer timer(std::chrono::milliseconds{10},
