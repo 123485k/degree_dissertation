@@ -1,0 +1,56 @@
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "vcpkg-debug",
+            "inherits": "vcpkg",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "vcpkg-release",
+            "inherits": "vcpkg",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "x86-64-debug",
+            "inherits": "vcpkg-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-linux",
+                "VCPKG_TARGET_ARCHITECTURE": "x86_64"
+            }
+        },
+        {
+            "name": "arm-release",
+            "inherits": "vcpkg-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "arm-linux",
+                "CMAKE_C_COMPILER": "/usr/bin/arm-linux-gnueabihf-gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/arm-linux-gnueabihf-g++",
+                "CMAKE_LINKER": "/usr/bin/mold"
+                
+            }
+        },
+        {
+            "name": "arm-debug",
+            "inherits": "vcpkg-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "arm-linux",
+                "CMAKE_C_COMPILER": "/usr/bin/arm-linux-gnueabihf-gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/arm-linux-gnueabihf-g++"
+            }
+        },
+        {
+            "name": "mingw-release",
+            "inherits": "vcpkg-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
+                "CMAKE_C_COMPILER": "/usr/lib/mingw64-toolchain/bin/x86_64-w64-mingw32-gcc",
+                "CMAKE_CXX_COMPILER": "/usr/lib/mingw64-toolchain/bin/x86_64-w64-mingw32-g++"
+            }
+        }
+    ]
+}

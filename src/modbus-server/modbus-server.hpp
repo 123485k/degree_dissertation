@@ -1,14 +1,26 @@
 #pragma once
 
-#include <arpa/inet.h>
-#include <modbus-tcp.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-
-#include <cstdint>
+#include <thread>
+#include <stdlib.h>
 #include <mutex>
 #include <string>
-#include <thread>
+#include <modbus.h>
+
+/*如果是windows平台则要加载相应的静态库和头文件*/
+#ifdef _WIN32
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <winsock2.h>
+#include <windows.h>
+
+/*linux平台*/
+#else
+#include <unistd.h>
+#include <error.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/select.h>
+#endif
 
 class ModbusSlave
 {

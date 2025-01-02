@@ -1,3 +1,4 @@
+find_package(Eigen3 CONFIG REQUIRED)
 # 编译静态库，暂不添加任何源码。
 add_library(phymodule "")
 

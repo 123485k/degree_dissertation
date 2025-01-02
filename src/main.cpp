@@ -1,7 +1,9 @@
+
 #include <iostream>
 #include <string>
 
-#include "CLI/CLI.hpp"
+#include <CLI/App.hpp>
+
 #include "modbus-server.hpp"
 #include "phymodule.hpp"
 #include "timer.hpp"

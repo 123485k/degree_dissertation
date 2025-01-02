@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Eigen/Core>
-
+namespace eg = Eigen;
 class SecondOderModule
 {
 public:
@@ -12,9 +12,9 @@ public:
     void Step();
 
 private:
-    Eigen::Vector2d x;
-    Eigen::Matrix2d A;
-    Eigen::Vector2d B;
-    Eigen::RowVector2d C;
+    eg::Vector2d x;
+    eg::Matrix2d A;
+    eg::Vector2d B;
+    eg::RowVector2d C;
     double D;
 };
